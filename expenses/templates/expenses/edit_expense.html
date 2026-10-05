@@ -1,0 +1,109 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Expense</title>
+
+    <link rel="stylesheet" href="{% static 'expenses/style.css' %}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Edit Expense</h1>
+
+        <div class="form-section">
+
+            <h2>Update Expense</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ expense.title }}"
+                    placeholder="Expense title"
+                    required
+                >
+
+                <input
+                    type="number"
+                    name="amount"
+                    value="{{ expense.amount }}"
+                    step="0.01"
+                    placeholder="Amount"
+                    required
+                >
+
+                <select name="category" required>
+
+                    <option value="">Select Category</option>
+
+                    <option value="Food"
+                        {% if expense.category == "Food" %}selected{% endif %}>
+                        Food
+                    </option>
+
+                    <option value="Transport"
+                        {% if expense.category == "Transport" %}selected{% endif %}>
+                        Transport
+                    </option>
+
+                    <option value="Shopping"
+                        {% if expense.category == "Shopping" %}selected{% endif %}>
+                        Shopping
+                    </option>
+
+                    <option value="Bills"
+                        {% if expense.category == "Bills" %}selected{% endif %}>
+                        Bills
+                    </option>
+
+                    <option value="Entertainment"
+                        {% if expense.category == "Entertainment" %}selected{% endif %}>
+                        Entertainment
+                    </option>
+
+                    <option value="Other"
+                        {% if expense.category == "Other" %}selected{% endif %}>
+                        Other
+                    </option>
+
+                </select>
+
+                <input
+                    type="date"
+                    name="date"
+                    value="{{ expense.date|date:'Y-m-d' }}"
+                    required
+                >
+
+                <textarea
+                    name="description"
+                    placeholder="Description"
+                >{{ expense.description }}</textarea>
+
+                <button type="submit">
+                    Update Expense
+                </button>
+
+            </form>
+
+        </div>
+
+        <p>
+            <a href="{% url 'expense_list' %}">
+                ← Back to Expenses
+            </a>
+        </p>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker</title>
+
+    <link rel="stylesheet" href="{% static 'expenses/style.css' %}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Expense Tracker</h1>
+
+
+        <!-- Dashboard Summary -->
+
+        <div class="summary">
+
+            <div class="summary-card">
+                <h3>Total Spending</h3>
+                <p>₹{{ total_expenses }}</p>
+            </div>
+
+            <div class="summary-card">
+                <h3>Total Expenses</h3>
+                <p>{{ expense_count }}</p>
+            </div>
+
+        </div>
+
+
+        <!-- Add Expense -->
+
+        <div class="form-section">
+
+            <h2>Add Expense</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Expense title"
+                    required
+                >
+
+                <input
+                    type="number"
+                    name="amount"
+                    step="0.01"
+                    placeholder="Amount"
+                    required
+                >
+
+                <select name="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <input
+                    type="date"
+                    name="date"
+                    required
+                >
+
+                <textarea
+                    name="description"
+                    placeholder="Description"
+                ></textarea>
+
+                <button type="submit">
+                    Add Expense
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- Expense List -->
+
+        <div class="expense-section">
+
+            <h2>Expenses</h2>
+
+            {% for expense in expenses %}
+
+                <div class="expense-card">
+
+                    <h3>{{ expense.title }}</h3>
+
+                    <p class="amount">
+                        ₹{{ expense.amount }}
+                    </p>
+
+                    <p>
+                        Category: {{ expense.category }}
+                    </p>
+
+                    <p>
+                        Date: {{ expense.date }}
+                    </p>
+
+                    {% if expense.description %}
+                        <p>
+                            {{ expense.description }}
+                        </p>
+                    {% endif %}
+                        
+                    <a
+                        href="{% url 'edit_expense' expense.id %}"
+                        class="edit-button"
+                    >
+                        Edit
+                    </a>
+                    
+                    <form
+                        method="POST"
+                        action="{% url 'delete_expense' expense.id %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="delete-button"
+                        >
+                            Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% empty %}
+
+                <p>No expenses added yet.</p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>
